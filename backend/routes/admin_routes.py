@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models import *
 from auth import role_required
+from tasks import daily_report
 import json
 
 admin_bp = Blueprint('admin', __name__)
@@ -177,3 +178,39 @@ def deactivate_user(user_id):
     db.session.commit()
 
     return jsonify({"message": "User deactivated"})
+
+@admin_bp.route("/user/<int:user_id>/activate", methods=["PUT"])
+@role_required("admin")
+def activate_user(user_id):
+
+    user = User.query.get_or_404(user_id)
+
+    user.is_active = True
+
+    db.session.commit()
+
+    return jsonify({"message": "User activated"})
+
+@admin_bp.route("/placements", methods=["GET"])
+@role_required("admin")
+def placements():
+    placements = Placement.query.all()
+
+    return jsonify([
+        {   
+            "id": p.id,
+            "student": p.student.user.name if p.student and p.student.user else "",
+            "company": p.company.company_name if p.company else "",
+            "job_title": p.job_title,
+            "package": p.package,
+            "placed_on": str(p.placed_on)
+        }
+        for p in placements
+    ])
+
+@admin_bp.route('/report', methods=["POST"])
+@role_required("admin")
+def generate_report():
+
+    daily_report.delay()
+    return jsonify({"message": "Report generated"})

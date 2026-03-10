@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models import *
 from auth import require_auth
+from tasks import send_application_notification
 
 company_bp = Blueprint("company", __name__)
 
@@ -67,6 +68,8 @@ def drive_applications(user, id):
         for a in apps
     ])
 
+
+
 @company_bp.route("/application/<int:id>/accept", methods=["PUT"])
 @require_auth("company")
 def accept_application(user, id):
@@ -75,8 +78,17 @@ def accept_application(user, id):
 
     app.status = "selected"
 
+    placement = Placement(
+        student_id=app.student_id,
+        company_id=app.drive.company_id,
+        job_title=app.drive.job_title,
+        salary=app.drive.salary,
+        placed_on=datetime.utcnow()
+    )
+    db.session.add(placement)
     db.session.commit()
 
+    send_application_notification.delay(app.student.user.name, app.drive.company.company_name, app.drive.job_title, "selected")
     return jsonify({"message":"Student selected"})
 
 

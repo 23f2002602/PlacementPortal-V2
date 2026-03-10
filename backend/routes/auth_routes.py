@@ -2,7 +2,7 @@ import os
 from flask import Blueprint, request, jsonify, current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-
+from tasks import send_registration_email
 from models import db, User, Company, Student
 from auth import create_token
 
@@ -15,7 +15,6 @@ auth_bp = Blueprint('auth', __name__)
 def allowed_file(filename):
     ext = filename.rsplit('.', 1)[-1].lower() if '.' in filename else ''
     return ext in current_app.config.get('ALLOWED_EXTENSIONS', {'pdf'})
-
 
 # =====================================================
 # REGISTER
@@ -133,6 +132,8 @@ def register():
             student.resume_filename = filename
 
     db.session.commit()
+
+    send_registration_email.delay(user.email, user.name)
 
     return jsonify({'message': 'Registered successfully'}), 201
 
