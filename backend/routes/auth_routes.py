@@ -136,10 +136,6 @@ def register():
 
     return jsonify({'message': 'Registered successfully'}), 201
 
-
-# =====================================================
-# LOGIN
-# =====================================================
 @auth_bp.route('/login', methods=['POST'])
 def login():
 
@@ -167,9 +163,8 @@ def login():
 
     if user.role == 'company':
         company = Company.query.filter_by(user_id=user.id).first()
-        if company:
-            response["company_id"] = company.id
-            response["approval_status"] = company.approval_status
+        if company and company.approval_status != "approved":
+            return jsonify({"error": "Company awaiting admin approval"}), 403
 
     elif user.role == 'student':
         student = Student.query.filter_by(user_id=user.id).first()

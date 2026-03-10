@@ -21,6 +21,20 @@ def stats():
         "placements": placements
     })
 
+@admin_bp.route("/companies/pending")
+def pending_companies():
+
+    companies = Company.query.filter_by(approval_status="pending").all()
+
+    return jsonify([
+        {
+            "id": c.id,
+            "company_name": c.company_name,
+            "email": c.user.email
+        }
+        for c in companies
+    ])
+
 @admin_bp.route("/companies", methods=["GET"])
 @role_required("admin")
 def get_companies():
@@ -111,13 +125,30 @@ def get_drives():
 
     return jsonify(result)
 
+@admin_bp.route("/drives/pending")
+def pending_drives():
+
+    drives = PlacementDrive.query.filter_by(
+        status="pending_approval"
+    ).all()
+
+    return jsonify([
+        {
+            "id": d.id,
+            "company": d.company.company_name,
+            "title": d.job_title
+        }
+        for d in drives
+    ])
+
+
 @admin_bp.route("/drive/<int:drive_id>/approve", methods=["PUT"])
 @role_required("admin")
 def approve_drive(drive_id):
 
     drive = PlacementDrive.query.get_or_404(drive_id)
 
-    drive.status = "approved"
+    drive.status = "open"
 
     db.session.commit()
 

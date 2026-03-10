@@ -10,6 +10,7 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String)
     is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     student = db.relationship("Student", back_populates="user", uselist=False)
     company = db.relationship("Company", back_populates="user", uselist=False)
@@ -32,7 +33,9 @@ class Student(db.Model):
     resume_filename = db.Column(db.String(300))
 
     user = db.relationship("User", back_populates="student")
-    applications = db.relationship("Application", back_populates="student", cascade="all, delete-orphan")
+    applications = db.relationship("Application", 
+                                   back_populates="student", 
+                                   cascade="all, delete-orphan")
     
     # Updated to match Placement class relationship
     placements_rel = db.relationship("Placement", back_populates="student")
@@ -55,7 +58,8 @@ class Company(db.Model):
     approval_status = db.Column(db.String(20), default="pending")
 
     user = db.relationship("User", back_populates="company")
-    drives = db.relationship("PlacementDrive", back_populates="company", cascade="all, delete-orphan")
+    drives = db.relationship("PlacementDrive", back_populates="company", 
+                             cascade="all, delete-orphan")
     
     # Updated to match Placement class relationship
     placements_rel = db.relationship("Placement", back_populates="company")
@@ -77,7 +81,8 @@ class PlacementDrive(db.Model):
     location = db.Column(db.String)
     salary = db.Column(db.Float)
     deadline = db.Column(db.DateTime)
-    status = db.Column(db.String(30), default="open")
+    status = db.Column(db.String(30),default="pending_approval")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     company = db.relationship("Company", back_populates="drives")
     applications = db.relationship("Application", back_populates="drive", lazy=True)
@@ -86,11 +91,8 @@ class PlacementDrive(db.Model):
         return f'<PlacementDrive {self.job_title}>'
 
 class Application(db.Model):
-    # Default tablename is "application"
     id = db.Column(db.Integer, primary_key = True)
-    # FIX: "student.id" -> "students.id"
     student_id = db.Column(db.Integer, db.ForeignKey("students.id"), nullable=False)
-    # This refers to PlacementDrive table "placement_drive"
     drive_id = db.Column(db.Integer, db.ForeignKey("placement_drive.id"), nullable=False)
     applied_date = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String(30), default="applied")
