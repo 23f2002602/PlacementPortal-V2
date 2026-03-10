@@ -4,6 +4,8 @@ import App    from './App.vue'
 import router from './router/index.js'
 import axios  from 'axios'
 import '@/assets/main.css'
+import "./assets/theme.css"
+import "./assets/global.css"
 
 // Attach JWT token to every outgoing request
 axios.interceptors.request.use(config => {

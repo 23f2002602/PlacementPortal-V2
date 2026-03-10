@@ -2,6 +2,7 @@ import os
 from flask import Flask, send_from_directory
 from config import Config
 from models import db
+from flask_cors import CORS
 from models.models import User
 from werkzeug.security import generate_password_hash
 
@@ -10,14 +11,16 @@ FRONTEND_DIR = os.path.join(os.path.dirname(__file__), '..', 'frontend')
 def create_app():
     app = Flask(__name__)
 
+    CORS(app)
+    
     app.config.from_object(Config)
 
     db.init_app(app)
 
     from routes.auth_routes    import auth_bp
-    from routes.admin  import admin_bp
-    from routes.company import company_bp
-    from routes.student import student_bp
+    from routes.admin_routes  import admin_bp
+    from routes.company_routes import company_bp
+    from routes.student_routes import student_bp
 
     app.register_blueprint(auth_bp,    url_prefix='/api')
     app.register_blueprint(admin_bp,   url_prefix='/api/admin')

@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from . import db
 
 class User(db.Model):
@@ -10,7 +9,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String)
-    active = db.Column(db.Boolean, default=True)
+    is_active = db.Column(db.Boolean, default=True)
 
     student = db.relationship("Student", back_populates="user", uselist=False)
     company = db.relationship("Company", back_populates="user", uselist=False)
@@ -24,6 +23,7 @@ class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     branch = db.Column(db.String(80))
+    roll_number = db.Column(db.String(50))
     cgpa = db.Column(db.Float, default=0.0)
     year = db.Column(db.Integer)
     phone = db.Column(db.String(20))
@@ -33,7 +33,9 @@ class Student(db.Model):
 
     user = db.relationship("User", back_populates="student")
     applications = db.relationship("Application", back_populates="student", cascade="all, delete-orphan")
-    placements = db.relationship("Placement", back_populates="student")
+    
+    # Updated to match Placement class relationship
+    placements_rel = db.relationship("Placement", back_populates="student")
 
     def __repr__(self):
         return f"<Student {self.user.name if self.user else self.id}>"
@@ -54,14 +56,18 @@ class Company(db.Model):
 
     user = db.relationship("User", back_populates="company")
     drives = db.relationship("PlacementDrive", back_populates="company", cascade="all, delete-orphan")
-    placements = db.relationship("Placement", back_populates="company")
+    
+    # Updated to match Placement class relationship
+    placements_rel = db.relationship("Placement", back_populates="company")
 
     def __repr__(self):
         return f"<Company {self.company_name}>"
 
 class PlacementDrive(db.Model):
+    # Default tablename is "placement_drive"
     id = db.Column(db.Integer, primary_key = True)
-    company_id = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False)
+    # FIX: "company.id" -> "companies.id"
+    company_id = db.Column(db.Integer, db.ForeignKey("companies.id"), nullable=False) 
     job_title = db.Column(db.String(150), nullable=False)
     job_description = db.Column(db.String)
     skills_required = db.Column(db.Text)
@@ -74,14 +80,17 @@ class PlacementDrive(db.Model):
     status = db.Column(db.String(30), default="open")
 
     company = db.relationship("Company", back_populates="drives")
-    applications = db.relationship("Application", backref = "drive", lazy = True)
+    applications = db.relationship("Application", back_populates="drive", lazy=True)
 
     def __repr__(self):
         return f'<PlacementDrive {self.job_title}>'
 
 class Application(db.Model):
+    # Default tablename is "application"
     id = db.Column(db.Integer, primary_key = True)
-    student_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
+    # FIX: "student.id" -> "students.id"
+    student_id = db.Column(db.Integer, db.ForeignKey("students.id"), nullable=False)
+    # This refers to PlacementDrive table "placement_drive"
     drive_id = db.Column(db.Integer, db.ForeignKey("placement_drive.id"), nullable=False)
     applied_date = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String(30), default="applied")
@@ -103,17 +112,20 @@ class Application(db.Model):
 
 
 class Placement(db.Model):
+    # Default tablename is "placement"
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
     company_id = db.Column(db.Integer, db.ForeignKey('companies.id'), nullable=False)
-    application_id = db.Column(db.Integer, db.ForeignKey('applications.id'), nullable=False)
+    # FIX: "applications.id" -> "application.id" (since Application class has no __tablename__)
+    application_id = db.Column(db.Integer, db.ForeignKey('application.id'), nullable=False)
     position = db.Column(db.String(150))
     salary = db.Column(db.String(50))             
     joining_date = db.Column(db.Date)
     placed_on = db.Column(db.DateTime, default=datetime.utcnow)
 
-    student = db.relationship('Student', backref='placements')
-    company = db.relationship('Company', backref='placements')
+    # Note: changed back_populates names to avoid naming conflicts with the foreign key columns
+    student = db.relationship('Student', back_populates='placements_rel')
+    company = db.relationship('Company', back_populates='placements_rel')
     application = db.relationship('Application', back_populates='placement')
 
     def __repr__(self):
