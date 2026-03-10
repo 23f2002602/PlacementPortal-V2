@@ -50,3 +50,44 @@ def get_company_drives(user):
         }
         for d in drives
     ])
+
+@company_bp.route("/drive/<int:id>/applications")
+@require_auth("company")
+def drive_applications(user, id):
+
+    apps = Application.query.filter_by(drive_id=id).all()
+
+    return jsonify([
+        {
+            "id": a.id,
+            "student": a.student.user.name,
+            "email": a.student.user.email,
+            "status": a.status
+        }
+        for a in apps
+    ])
+
+@company_bp.route("/application/<int:id>/accept", methods=["PUT"])
+@require_auth("company")
+def accept_application(user, id):
+
+    app = Application.query.get_or_404(id)
+
+    app.status = "selected"
+
+    db.session.commit()
+
+    return jsonify({"message":"Student selected"})
+
+
+@company_bp.route("/application/<int:id>/reject", methods=["PUT"])
+@require_auth("company")
+def reject_application(user, id):
+
+    app = Application.query.get_or_404(id)
+
+    app.status = "rejected"
+
+    db.session.commit()
+
+    return jsonify({"message":"Student rejected"})
