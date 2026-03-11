@@ -1,19 +1,41 @@
 <template>
-<div class="layout">
-  <div class="content">
-    <router-view/>
-  </div>
+  <div class="student-shell">
+    <nav class="student-sidebar shadow-lg">
+      <div class="sidebar-header p-4">
+        <h4 class="text-royal fw-bold mb-0">Student <span class="text-white">Portal</span></h4>
+      </div>
+      
+      <div class="nav-menu px-3 mt-3">
+        <router-link to="/student" class="nav-item" exact>
+          <i class="bi bi-house-door me-2"></i> Home
+        </router-link>
+        <router-link to="/student/drives" class="nav-item">
+          <i class="bi bi-briefcase me-2"></i> Drives
+        </router-link> 
+        <router-link to="/student/applications" class="nav-item">
+          <i class="bi bi-file-earmark-text me-2"></i> My Apps
+        </router-link>
+        <router-link to="/student/profile" class="nav-item">
+          <i class="bi bi-person me-2"></i> Profile
+        </router-link>
+      </div>
 
-  <div class="sidebar">
-    <h2>Student Portal</h2>
-    <nav>
-      <router-link to="/student">Available Drives</router-link>
-      <router-link to="/student/applications">My Applications</router-link>
-      <router-link to="/student/profile">Profile</router-link>
-      <button @click="logout" class="logout-btn">Logout</button>
+      <div class="sidebar-footer p-4 mt-auto">
+        <button @click="logout" class="btn-logout w-100">
+          <i class="bi bi-box-arrow-right me-2"></i> Logout
+        </button>
+      </div>
     </nav>
+
+    <main class="content-body">
+      <header class="top-bar px-4 py-3">
+        <span class="text-muted-light small">Welcome back, Student</span>
+      </header>
+      <div class="page-container">
+        <router-view></router-view>
+      </div>
+    </main>
   </div>
-</div>
 </template>
 
 <script>
@@ -30,70 +52,67 @@ export default {
 }
 </script>
 
-<style>
-.layout{
-  display:flex;
-  min-height:100vh;
-  background: #f8fafc;
+<style scoped>
+.student-shell { 
+  display: flex;
+  background-color: #121212; /* Dark Charcoal background */
+  min-height: 100vh; 
 }
 
-.content{
-  flex:1;
-  padding:40px;
+.student-sidebar { 
+  width: 260px;
+  background-color: #181818; 
+  border-right: 1px solid #2c2c2c;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  z-index: 100;
 }
 
-.sidebar{
-  width:260px;
-  background:#020617;
-  padding:30px;
-  border-left:1px solid #1e293b;
-  color: white;
+.content-body { 
+  margin-left: 260px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.sidebar h2{
-  margin-bottom:30px;
-  font-size: 1.5rem;
-  font-weight: 700;
+.top-bar {
+  background: #121212;
+  border-bottom: 1px solid #2c2c2c;
 }
 
-.sidebar nav{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
+.page-container {
+  padding: 2rem;
 }
 
-.sidebar a{
-  text-decoration:none;
-  color:#94a3b8;
-  padding:10px 12px;
-  border-radius:8px;
-  transition: all 0.2s;
+.text-royal { color: #7c4dff; } /* Royal Indigo */
+.text-muted-light { color: #a0a0a0; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  color: #a0a0a0;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  transition: 0.2s;
 }
 
-.sidebar a:hover {
-  background: #1e293b;
-  color: white;
+.nav-item:hover, .router-link-active { 
+  background-color: rgba(124, 77, 255, 0.1);
+  color: #7c4dff; 
 }
 
-.sidebar a.router-link-active{
-  background:#6366f1;
-  color:white;
-}
-
-.logout-btn {
-  margin-top: 20px;
-  background: #ef4444;
-  color: white;
-  border: none;
-  padding: 12px;
+.btn-logout {
+  background: transparent;
+  border: 1px solid #f44336;
+  color: #f44336;
   border-radius: 8px;
-  cursor: pointer;
+  padding: 10px;
   font-weight: 600;
-  text-align: left;
-  transition: background 0.2s;
-}
-
-.logout-btn:hover {
-  background: #dc2626;
+  cursor: pointer;
 }
 </style>

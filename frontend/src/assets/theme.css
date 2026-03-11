@@ -1,22 +1,27 @@
 /* Global Theme */
 
-:root{
-  --primary:#4f46e5;
-  --primary-dark:#4338ca;
-  --bg:#f1f5f9;
-  --sidebar:#1e293b;
-  --card:#ffffff;
-  --text:#1e293b;
-  --border:#e2e8f0;
+:root {
+  /* Core Palette */
+  --bg-dark: #020617;
+  --bg-card: #0f172a;
+  --border-color: #1e293b;
+  
+  /* Primary Actions */
+  --primary-indigo: #6366f1;
+  --primary-gradient: linear-gradient(135deg, #6366f1, #7c3aed);
+  
+  /* Text Colors */
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --text-label: #cbd5e1;
 }
 
 /* reset */
 
-body{
-  margin:0;
-  font-family: Inter, system-ui, Arial;
-  background:var(--bg);
-  color:var(--text);
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
 }
 
 /* cards */

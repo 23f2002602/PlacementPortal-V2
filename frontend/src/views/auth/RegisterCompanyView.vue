@@ -2,21 +2,35 @@
 <div class="register-company-page">
   <PublicNavbar />
   <div class="page-content">
-    <div class="card">
-      <h2>Company Registration</h2>
-      <div class="form-grid">
-        <input v-model="form.name" placeholder="HR Contact Name" required />
-        <input v-model="form.email" type="email" placeholder="HR Email" required />
-        <input v-model="form.password" type="password" placeholder="Password" required />
-        <input v-model="form.company_name" placeholder="Company Name" required />
-        <input v-model="form.industry" placeholder="Industry" />
-        <input v-model="form.location" placeholder="Location" />
-        <input v-model="form.website" placeholder="Website URL" />
-        <textarea v-model="form.description" placeholder="Company Description" rows="3"></textarea>
+    <div class="register-card shadow-lg">
+      <h2 class="title">Company Registration</h2>
+      <p class="subtitle">Partner with us for recruitment</p>
+
+      <div class="form-wrapper">
+        <div class="form-grid">
+          <label class="form-label">HR Contact Name</label>
+          <input v-model="form.name" placeholder="Enter name" required />
+          
+          <label class="form-label">HR Professional Email</label>
+          <input v-model="form.email" type="email" placeholder="hr@company.com" required />
+          
+          <label class="form-label">Password</label>
+          <input v-model="form.password" type="password" placeholder="Password" required />
+          
+          <label class="form-label">Company Name</label>
+          <input v-model="form.company_name" placeholder="Legal entity name" required />
+          
+          <label class="form-label">Company Description</label>
+          <textarea v-model="form.description" rows="3" placeholder="Tell us about your organization"></textarea>
+        </div>
       </div>
 
-      <button @click="register">Register Company</button>
-      <router-link to="/login" class="login-link">Already have an account? Login</router-link>
+      <button @click="register" class="register-submit-btn">Register Company</button>
+      
+      <div class="auth-footer text-center mt-4">
+        <span class="footer-text">Already a partner?</span>
+        <router-link to="/login" class="auth-link ms-2">Login Here</router-link>
+      </div>
     </div>
   </div>
 </div>
@@ -27,21 +41,12 @@ import API from "../../utils/api.js"
 import PublicNavbar from '@/components/PublicNavbar.vue'
 
 export default {
-  components: {
-    PublicNavbar
-  },
+  components: { PublicNavbar },
   data() {
     return {
       form: {
-        name: "",
-        email: "",
-        password: "",
-        company_name: "",
-        industry: "",
-        location: "",
-        website: "",
-        description: "",
-        role: "company"
+        name: "", email: "", password: "", company_name: "",
+        industry: "", location: "", website: "", description: "", role: "company"
       }
     }
   },
@@ -49,7 +54,7 @@ export default {
     async register() {
       try {
         await API.register(this.form);
-        alert("Registration successful! Please wait for admin approval.");
+        alert("Registration successful! Pending admin approval.");
         this.$router.push("/login");
       } catch (err) {
         alert(err.response?.data?.error || "Registration failed");
@@ -63,87 +68,42 @@ export default {
 .register-company-page {
   min-height: 100vh;
   background: #020617;
+  overflow-y: auto;
 }
+
 .page-content {
-  min-height: calc(100vh - 72px);
-  padding: 40px 20px;
+  padding: 110px 20px 60px; /* Ensures forms are visible below navbar */
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
 }
 
-.card {
-  background: #0f172a;
+.register-card {
+  width: 100%;
+  max-width: 500px;
   padding: 40px;
   border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  max-width: 520px;
-  color: white;
+  background: #0f172a;
   border: 1px solid #1e293b;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 10px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  background: linear-gradient(to right, #6366f1, #a855f7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+.title { text-align: center; color: white; font-weight: 700; margin-bottom: 5px; }
+.subtitle { text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 30px; }
 
-.form-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
+.form-label { font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; display: block; }
 
 input, textarea {
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid #334155;
-  background: #020617;
-  color: white;
-  transition: all 0.2s;
+  width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #334155;
+  background: #020617; color: white; margin-bottom: 15px;
 }
 
-input:focus, textarea:focus {
-  outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+.register-submit-btn {
+  width: 100%; padding: 14px; border: none; border-radius: 12px;
+  background: linear-gradient(135deg, #6366f1, #7c3aed); color: white;
+  font-weight: 700; cursor: pointer;
 }
 
-button {
-  padding: 16px;
-  background: linear-gradient(135deg, #6366f1, #7c3aed);
-  border: none;
-  border-radius: 12px;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: transform 0.2s, opacity 0.2s;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  opacity: 0.95;
-}
-
-.login-link {
-  color: #94a3b8;
-  text-align: center;
-  font-size: 0.9em;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.login-link:hover {
-  color: #6366f1;
-}
+.footer-text { color: #e2e8f0; font-size: 14px; }
+.auth-link { color: #818cf8; text-decoration: none; font-weight: 600; }
 </style>

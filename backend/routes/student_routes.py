@@ -21,8 +21,8 @@ def check_eligibility(student, drive):
 @require_auth("student")
 def get_drives(user):
     student = Student.query.filter_by(user_id=user.id).first()
-    # Students should only see drives that are open/approved
-    drives = PlacementDrive.query.filter_by(status="open").all() 
+    # UPDATED: Now fetches drives with status "active" to match your database
+    drives = PlacementDrive.query.filter_by(status="active").all()
 
     return jsonify([
         {
@@ -35,36 +35,35 @@ def get_drives(user):
             "deadline": str(d.deadline) if d.deadline else None,
             "status": d.status,
             "is_eligible": check_eligibility(student, d),
-            "eligibility_reason": "You do not meet the CGPA or Branch criteria" if not check_eligibility(student, d) else ""
+            "eligibility_reason": "" if check_eligibility(student, d) else "Criteria not met"
         }
         for d in drives
     ])
 
 @student_bp.route("/apply/<int:drive_id>", methods=["POST"])
 @require_auth("student")
-def apply_drive(user, drive_id):
+def apply_to_drive(user, drive_id):
     student = Student.query.filter_by(user_id=user.id).first()
     drive = PlacementDrive.query.get_or_404(drive_id)
 
-    if drive.status != "open":
-        return jsonify({"error":"Drive not open"}), 400
+    # UPDATED: Allow application if status is "open" OR "active"
+    if drive.status not in ["open", "active"]:
+        return jsonify({"error": "Drive not open"}), 400
 
-    if not check_eligibility(student, drive):
-        return jsonify({"error": "You do not meet the eligibility criteria (CGPA/Branch)"}), 400
-    
     # Check if already applied
-    existing = Application.query.filter_by(student_id=student.id, drive_id=drive_id).first()
+    existing = Application.query.filter_by(student_id=student.id, drive_id=drive.id).first()
     if existing:
-        return jsonify({"error": "Already applied to this drive"}), 400
+        return jsonify({"error": "Already applied"}), 400
 
-    app = Application(
-        student_id=student.id,
-        drive_id=drive_id
-    )
-    db.session.add(app)
+    # Eligibility check (optional but recommended here)
+    if not check_eligibility(student, drive):
+        return jsonify({"error": "You do not meet the eligibility criteria"}), 400
+
+    new_app = Application(student_id=student.id, drive_id=drive.id, status="applied")
+    db.session.add(new_app)
     db.session.commit()
 
-    return jsonify({"message":"Applied successfully"})
+    return jsonify({"message": "Application successful"})
 
 @student_bp.route("/applications")
 @require_auth("student")

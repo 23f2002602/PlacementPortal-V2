@@ -74,3 +74,77 @@ export default {
   }
 };
 </script>
+<style scoped>
+/* Main Container Colors */
+.admin-table-container {
+  background-color: #1e1e1e; /* Dark Charcoal Panel */
+  border: 1px solid #2c2c2c;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+/* Table Specific Styling */
+.table-dark-custom {
+  color: #f1f5f9;
+  background-color: #1e1e1e !important;
+  margin-bottom: 0;
+}
+
+/* Header - Matching Admin Slate Header */
+.table-dark-custom thead th {
+  background-color: #252525; /* Slightly lighter than charcoal */
+  color: #7c4dff; /* Royal Indigo */
+  border-bottom: 2px solid #2c2c2c;
+  padding: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+/* Rows - Removing White Background */
+.table-dark-custom td {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid #2c2c2c;
+  background-color: #1e1e1e;
+  color: #e2e8f0;
+}
+
+/* Row Hover Effect */
+.table-dark-custom tbody tr:hover td {
+  background-color: rgba(124, 77, 255, 0.05); /* Very subtle Indigo tint */
+}
+
+/* Buttons and Tags within Table */
+.text-success {
+  color: #4ade80 !important; /* High contrast green for salary */
+}
+
+.eligibility-tag {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(124, 77, 255, 0.1);
+  color: #7c4dff;
+  border: 1px solid rgba(124, 77, 255, 0.2);
+}
+
+/* Action Button Matching Login/Admin buttons */
+.btn-apply {
+  background: linear-gradient(135deg, #7c4dff, #6200ea);
+  border: none;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.btn-apply:disabled {
+  background: #2c2c2c;
+  color: #64748b;
+  cursor: not-allowed;
+}
+</style>

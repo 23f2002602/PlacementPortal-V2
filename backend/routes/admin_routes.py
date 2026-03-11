@@ -165,6 +165,7 @@ def admin_update_student(user, student_id):
     
     db.session.commit()
     return jsonify({"message": "Student updated successfully"})
+
 @admin_bp.route("/search", methods=["GET"])
 @require_auth("admin")
 def search(user):
@@ -231,7 +232,7 @@ def approve_drive(user, drive_id):
 
     drive = PlacementDrive.query.get_or_404(drive_id)
 
-    drive.status = "open"
+    drive.status = "active"
 
     db.session.commit()
 

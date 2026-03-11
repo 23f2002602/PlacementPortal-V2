@@ -173,7 +173,7 @@ export default {
       }
     },
     getStatusClass(status) {
-      const map = { 'open': 'bg-success', 'pending_approval': 'bg-warning text-dark', 'rejected': 'bg-danger', 'closed': 'bg-secondary' };
+      const map = { active: 'bg-success', 'pending_approval': 'bg-warning text-dark', 'rejected': 'bg-danger', 'closed': 'bg-secondary' };
       return map[status] || 'bg-light text-dark';
     },
     async deleteDrive(id) {

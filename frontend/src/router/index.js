@@ -41,6 +41,8 @@ const routes = [
     component: StudentLayout,
     children: [
       { path: "", component: () => import("@/views/student/AvailableDrives.vue") },
+      // ADD THIS LINE:
+      { path: "drives", component: () => import("@/views/student/Drives.vue") }, 
       { path: "applications", component: () => import("@/views/student/MyApplications.vue") },
       { path: "profile", component: () => import("@/views/student/Profile.vue") }
     ]

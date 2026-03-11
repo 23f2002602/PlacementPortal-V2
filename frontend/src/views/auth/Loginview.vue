@@ -2,9 +2,9 @@
 <div class="login-page">
   <PublicNavbar />
   <div class="page-content">
-    <div class="card">
-      <h2>Access Portal</h2>
-      <p class="text-center text-muted small mb-4">Select your role and enter credentials</p>
+    <div class="login-card shadow-lg">
+      <h2 class="title">Access Portal</h2>
+      <p class="subtitle">Select your role and enter credentials</p>
       
       <div class="role-selector d-flex gap-2 mb-4">
         <button 
@@ -18,21 +18,28 @@
         </button>
       </div>
 
-      <div class="form-grid">
-        <div class="input-group-custom">
-           <i class="bi bi-envelope"></i>
-           <input v-model="email" type="email" placeholder="Email Address" required />
+      <div class="form-wrapper">
+        <div class="form-group mb-3">
+           <label class="form-label">Email Address</label>
+           <div class="input-wrapper">
+             <i class="bi bi-envelope"></i>
+             <input v-model="email" type="email" placeholder="name@example.com" required />
+           </div>
         </div>
-        <div class="input-group-custom">
-           <i class="bi bi-lock"></i>
-           <input v-model="password" type="password" placeholder="Password" required />
+        
+        <div class="form-group mb-4">
+           <label class="form-label">Password</label>
+           <div class="input-wrapper">
+             <i class="bi bi-lock"></i>
+             <input v-model="password" type="password" placeholder="Enter password" required />
+           </div>
         </div>
       </div>
 
       <button @click="login" class="login-submit-btn">Continue to Dashboard</button>
       
-      <div class="auth-footer text-center mt-3">
-        <span class="text-muted small">New here?</span>
+      <div class="auth-footer text-center mt-4">
+        <span class="footer-text">New here?</span>
         <div class="d-flex justify-content-center gap-3 mt-2">
           <router-link to="/register/student" class="auth-link">Student Hub</router-link>
           <div class="vr"></div>
@@ -81,65 +88,118 @@ export default {
 .login-page {
   min-height: 100vh;
   background: #020617;
+  /* UPDATED: Ensure scrolling is possible */
+  overflow-y: auto; 
 }
+
 .page-content {
-  min-height: calc(100vh - 72px);
+  /* UPDATED: Increased top padding (100px) to clear the navbar and added bottom padding */
+  padding: 100px 20px 60px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
 }
+
 .login-card {
-  width: 380px;
+  width: 100%;
+  max-width: 400px;
   padding: 40px;
-  border-radius: 16px;
-  background: #020617;
+  border-radius: 20px;
+  background: #0f172a;
   border: 1px solid #1e293b;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
+
 .title {
   text-align: center;
   font-size: 26px;
   font-weight: 700;
-  margin-bottom: 10px;
   color: white;
+  margin-bottom: 5px;
 }
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-label {
-  font-size: 14px;
+
+.subtitle {
+  text-align: center;
   color: #94a3b8;
-}
-input {
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #334155;
-  background: #0f172a;
-  color: white;
   font-size: 14px;
+  margin-bottom: 30px;
 }
-input:focus {
-  outline: none;
+
+.role-btn {
+  padding: 10px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.role-btn.active {
+  background: #6366f1;
+  color: white;
   border-color: #6366f1;
 }
-.login-btn {
-  margin-top: 10px;
-  padding: 12px;
+
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper i {
+  position: absolute;
+  left: 15px;
+  color: #64748b;
+}
+
+input {
+  width: 100%;
+  padding: 12px 12px 12px 45px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  background: #020617;
+  color: white;
+  transition: 0.2s;
+}
+
+.login-submit-btn {
+  width: 100%;
+  padding: 14px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   background: linear-gradient(135deg, #6366f1, #7c3aed);
   color: white;
-  font-weight: 600;
+  font-weight: 700;
+  margin-top: 10px;
   cursor: pointer;
   transition: 0.2s;
 }
-.login-btn:hover {
-  opacity: 0.9;
+
+/* UPDATED: Enhanced visibility for "New here?" text */
+.footer-text {
+  color: #e2e8f0; 
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.auth-link {
+  color: #818cf8;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.vr {
+  background-color: #334155;
 }
 </style>
