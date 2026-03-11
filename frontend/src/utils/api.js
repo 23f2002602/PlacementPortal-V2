@@ -16,28 +16,22 @@ API.interceptors.request.use((config) => {
   return config
 })
 
-export default {
-
-  login(data) {
-    return API.post("/login", data)
-  },
-
-  register(formData) {
-    return API.post("/register", formData, {
+// Add helper methods directly to the API instance
+API.login = (data) => API.post("/login", data);
+API.register = (data, isMultipart = false) => {
+  if (isMultipart) {
+    return API.post("/register", data, {
       headers: { "Content-Type": "multipart/form-data" }
-    })
-  },
-
-  getStudents() {
-    return API.get("/admin/students")
-  },
-
-  getCompanies() {
-    return API.get("/admin/companies")
-  },
-
-  getDrives() {
-    return API.get("/admin/drives")
+    });
   }
+  const formData = new FormData();
+  for (const key in data) {
+    formData.append(key, data[key]);
+  }
+  return API.post("/register", formData);
+};
+API.getStudents = () => API.get("/admin/students");
+API.getCompanies = () => API.get("/admin/companies");
+API.getDrives = () => API.get("/admin/drives");
 
-}
+export default API;

@@ -9,3 +9,8 @@ class Config:
     MAX_CONTENT_LENGTH = 5*1024*1024
     ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}
 
+    # Redis and Celery Configuration
+    REDIS_URL = "redis://localhost:6379/0"
+    CELERY_BROKER_URL = "redis://localhost:6379/0"
+    CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+

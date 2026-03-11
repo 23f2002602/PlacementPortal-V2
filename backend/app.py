@@ -2,9 +2,10 @@ import os
 from flask import Flask, send_from_directory
 from config import Config
 from models import db
-from flask_cors import CORS
 from models.models import User
 from werkzeug.security import generate_password_hash
+from flask_cors import CORS
+from extensions import cache
 
 FRONTEND_DIR = os.path.join(os.path.dirname(__file__), '..', 'frontend')
 
@@ -16,6 +17,7 @@ def create_app():
     app.config.from_object(Config)
 
     db.init_app(app)
+    cache.init_app(app, config={'CACHE_TYPE': 'RedisCache', 'CACHE_REDIS_URL': Config.REDIS_URL})
 
     from routes.auth_routes    import auth_bp
     from routes.admin_routes  import admin_bp

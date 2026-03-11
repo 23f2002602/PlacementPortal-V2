@@ -33,13 +33,19 @@ def token_required(f):
         return f(*args, **kwargs)
     return decorated
 
-def role_required(*roles):
+def require_auth(*roles):
     def decorator(f):
         @wraps(f)
         @token_required  # always verify token first
         def wrapped(*args, **kwargs):
             if request.role not in roles:
                 return jsonify({'error': 'Access denied. Wrong role.'}), 403
-            return f(*args, **kwargs)
+            
+            from models.models import User
+            user = User.query.get(request.user_id)
+            if not user:
+                return jsonify({'error': 'User not found'}), 404
+                
+            return f(user, *args, **kwargs)
         return wrapped
     return decorator

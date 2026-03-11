@@ -1,29 +1,19 @@
 <template>
-
 <div class="layout">
-
   <div class="content">
     <router-view/>
   </div>
 
   <div class="sidebar">
-
-    <h2>Placement Portal</h2>
-
+    <h2>Student Portal</h2>
     <nav>
-      <router-link to="/admin">Dashboard</router-link>
-      <router-link to="/admin/students">Students</router-link>
-      <router-link to="/admin/companies">Companies</router-link>
-      <router-link to="/admin/drives">Drives</router-link>
-      <router-link to="/admin/placements">Placements</router-link>
-      <router-link to="/admin/applications">Applications</router-link>
+      <router-link to="/student">Available Drives</router-link>
+      <router-link to="/student/applications">My Applications</router-link>
+      <router-link to="/student/profile">Profile</router-link>
       <button @click="logout" class="logout-btn">Logout</button>
     </nav>
-
   </div>
-
 </div>
-
 </template>
 
 <script>
@@ -41,15 +31,15 @@ export default {
 </script>
 
 <style>
-
 .layout{
   display:flex;
   min-height:100vh;
+  background: #f8fafc;
 }
 
 .content{
   flex:1;
-  padding:50px;
+  padding:40px;
 }
 
 .sidebar{
@@ -62,6 +52,8 @@ export default {
 
 .sidebar h2{
   margin-bottom:30px;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .sidebar nav{
@@ -73,8 +65,14 @@ export default {
 .sidebar a{
   text-decoration:none;
   color:#94a3b8;
-  padding:8px 10px;
-  border-radius:6px;
+  padding:10px 12px;
+  border-radius:8px;
+  transition: all 0.2s;
+}
+
+.sidebar a:hover {
+  background: #1e293b;
+  color: white;
 }
 
 .sidebar a.router-link-active{
@@ -87,12 +85,14 @@ export default {
   background: #ef4444;
   color: white;
   border: none;
-  padding: 10px;
-  border-radius: 6px;
+  padding: 12px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   text-align: left;
+  transition: background 0.2s;
 }
+
 .logout-btn:hover {
   background: #dc2626;
 }

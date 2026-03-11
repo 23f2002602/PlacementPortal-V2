@@ -10,6 +10,7 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String)
     is_active = db.Column(db.Boolean, default=True)
+    is_blacklisted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     student = db.relationship("Student", back_populates="user", uselist=False)
@@ -80,6 +81,7 @@ class PlacementDrive(db.Model):
     eligible_years = db.Column(db.String(100))
     location = db.Column(db.String)
     salary = db.Column(db.Float)
+    package = db.Column(db.Float) # Added for consistency with package usage in routes
     deadline = db.Column(db.DateTime)
     status = db.Column(db.String(30),default="pending_approval")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
